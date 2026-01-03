@@ -18,7 +18,7 @@ const digits = {
   9: ['╔','═','═','╗','║','╔','╗','║','║','╚','╝','║','╚','═','╝','║','╔','═','╝','║','╚','═','═','╝']
 };
 
-// Create a single digit grid
+// Create a digit element with 24 clocks
 function createDigit() {
   const digitEl = document.createElement('div');
   digitEl.className = 'digit';
@@ -33,7 +33,7 @@ function createDigit() {
   return digitEl;
 }
 
-// Set a digit element to display a number
+// Set a digit to display a number
 function setDigit(digitEl, number) {
   const pattern = digits[number];
   const clocks = digitEl.querySelectorAll('.clock');
@@ -46,32 +46,38 @@ function setDigit(digitEl, number) {
   });
 }
 
-// Get current time as array of 6 digits (12-hour format)
+// Get current time as 6 digits
 function getTimeDigits() {
   const now = new Date();
-  let hours = now.getHours() % 12;
-  if (hours === 0) hours = 12; // midnight/noon = 12, not 0
-  const minutes = now.getMinutes();
-  const seconds = now.getSeconds();
+  let h = now.getHours() % 12 || 12;
+  const m = now.getMinutes();
+  const s = now.getSeconds();
   
-  const timeStr = [hours, minutes, seconds]
+  return [h, m, s]
     .map(n => String(n).padStart(2, '0'))
-    .join('');
-  
-  return timeStr.split('').map(Number);
+    .join('')
+    .split('')
+    .map(Number);
 }
 
-// Create 6 digit displays
+// Build the display: 3 pairs of 2 digits each
 const display = document.getElementById('display');
 const digitElements = [];
 
-for (let i = 0; i < 6; i++) {
-  const d = createDigit();
-  display.appendChild(d);
-  digitElements.push(d);
+for (let i = 0; i < 3; i++) {
+  const pair = document.createElement('div');
+  pair.className = 'digit-pair';
+  
+  const d1 = createDigit();
+  const d2 = createDigit();
+  pair.appendChild(d1);
+  pair.appendChild(d2);
+  display.appendChild(pair);
+  
+  digitElements.push(d1, d2);
 }
 
-// Update the display with current time
+// Update display
 function updateTime() {
   const timeDigits = getTimeDigits();
   timeDigits.forEach((digit, i) => {
@@ -79,6 +85,5 @@ function updateTime() {
   });
 }
 
-// Update every second
 updateTime();
 setInterval(updateTime, 1000);
