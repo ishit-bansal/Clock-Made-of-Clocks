@@ -1,30 +1,23 @@
-/**
- * Clock Made of Clocks
- * Each digit is formed by a 6x4 grid of mini analog clocks
- */
-
-// Symbol to angle mapping
-// Each symbol maps to [angle1, angle2] for the two clock hands
-const charMap = {
-  '╔': [90, 0],      // down + right
-  '╗': [90, 180],    // down + left
-  '╚': [-90, 0],     // up + right
-  '╝': [-90, 180],   // up + left
-  '═': [0, 180],     // horizontal
-  '║': [-90, 90],    // vertical
-  ' ': [135, 135]    // neutral (hidden)
+// Angle mappings for each character
+const angles = {
+  '╔': [90, 0],    
+  '╗': [90, 180],
+  '╚': [-90, 0],   
+  '╝': [-90, 180],
+  '═': [0, 180],   
+  '║': [-90, 90],
+  ' ': [135, 135]
 };
 
-// Digit patterns (0-9)
-// Each is a 24-element array representing a 6x4 grid
+// Digit patterns (6x4 grid each)
 const digits = {
 
-  0:['╔','═','═','╗',
-     '║','╔','╗','║',
-     '║','║','║','║',
-     '║','║','║','║',
-     '║','╚','╝','║',
-     '╚','═','═','╝'],
+  0: ['╔','═','═','╗',
+      '║','╔','╗','║',
+      '║','║','║','║',
+      '║','║','║','║',
+      '║','╚','╝','║',
+      '╚','═','═','╝'],
 
   1: ['╔','═','╗',' ',
       '╚','╗','║',' ',
@@ -46,7 +39,7 @@ const digits = {
       '╚','═','╗','║',
       '╔','═','╝','║',
       '╚','═','═','╝'],
-      
+
   4: ['╔','╗','╔','╗',
       '║','║','║','║',
       '║','╚','╝','║',
@@ -90,76 +83,84 @@ const digits = {
       '╚','═','═','╝']
 };
 
-// Create a digit container with 24 mini clocks
-function createDigit() {
-  const el = document.createElement('div');
-  el.className = 'digit';
-  
-  for (let i = 0; i < 24; i++) {
-    const clock = document.createElement('div');
-    clock.className = 'clock';
-    clock.innerHTML = '<div class="hand"></div><div class="hand"></div>';
-    el.appendChild(clock);
-  }
-  
-  return el;
-}
-
-// Update a digit to show a specific number
-function setDigit(el, num) {
-  const pattern = digits[num];
-  el.querySelectorAll('.clock').forEach((clock, i) => {
-    const [a1, a2] = charMap[pattern[i]];
-    const hands = clock.querySelectorAll('.hand');
-    hands[0].style.transform = `rotate(${a1}deg)`;
-    hands[1].style.transform = `rotate(${a2}deg)`;
-  });
-}
-
-// Get current time as array of 6 digits (12-hour format)
-function getTimeDigits() {
-  const now = new Date();
-  const h = now.getHours() % 12 || 12;
-  const m = now.getMinutes();
-  const s = now.getSeconds();
-  
-  return [h, m, s]
-    .map(n => String(n).padStart(2, '0'))
-    .join('')
-    .split('')
-    .map(Number);
-}
-
-// Initialize display
+// Build DOM
 const display = document.getElementById('display');
-const digitElements = [];
+const hands = [], prev = [];
 
-// Create 3 pairs of digits (HH:MM:SS)
 for (let i = 0; i < 3; i++) {
   const pair = document.createElement('div');
-  pair.className = 'digit-pair';
-  
-  const d1 = createDigit();
-  const d2 = createDigit();
-  pair.appendChild(d1);
-  pair.appendChild(d2);
+  pair.className = 'pair';
+  for (let j = 0; j < 2; j++) {
+    const digit = document.createElement('div');
+    digit.className = 'digit';
+    for (let k = 0; k < 24; k++) {
+      const clock = document.createElement('div');
+      clock.className = 'clock';
+      const h1 = document.createElement('div');
+      const h2 = document.createElement('div');
+      h1.className = h2.className = 'hand';
+      clock.append(h1, h2);
+      digit.appendChild(clock);
+      hands.push([h1, h2]);
+      prev.push([0, 0]);
+    }
+    pair.appendChild(digit);
+  }
   display.appendChild(pair);
-  
-  digitElements.push(d1, d2);
 }
 
-// Update the display with current time
-function update() {
-  getTimeDigits().forEach((digit, i) => {
-    setDigit(digitElements[i], digit);
-  });
+// Normalize for shortest rotation
+const norm = (n, p) => {
+  let d = (n - p) % 360;
+  if (d > 180) d -= 360;
+  if (d < -180) d += 360;
+  return p + d;
+};
+
+// Update clock
+function tick() {
+  const now = new Date();
+  const t = [now.getHours() % 12 || 12, now.getMinutes(), now.getSeconds()]
+    .map(n => String(n).padStart(2, '0')).join('');
+
+  for (let i = 0; i < 6; i++) {
+    const pat = digits[+t[i]];
+    for (let j = 0; j < 24; j++) {
+      const idx = i * 24 + j;
+      const [a, b] = angles[pat[j]];
+      const n1 = norm(a, prev[idx][0]);
+      const n2 = norm(b, prev[idx][1]);
+      hands[idx][0].style.transform = `rotate(${n1}deg)`;
+      hands[idx][1].style.transform = `rotate(${n2}deg)`;
+      prev[idx] = [n1, n2];
+    }
+  }
 }
 
-// Start the clock
-update();
-setInterval(update, 1000);
+tick();
+setInterval(tick, 1000);
 
 // Theme toggle
-document.getElementById('themeToggle').onclick = () => {
-  document.body.classList.toggle('dark');
+const theme = { value: localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') };
+
+const apply = () => {
+  document.documentElement.setAttribute('data-theme', theme.value);
+  document.getElementById('theme-toggle')?.setAttribute('aria-label', theme.value);
+};
+
+apply();
+
+window.onload = () => {
+  apply();
+  document.getElementById('theme-toggle').onclick = () => {
+    theme.value = theme.value === 'light' ? 'dark' : 'light';
+    localStorage.setItem('theme', theme.value);
+    apply();
+  };
+};
+
+matchMedia('(prefers-color-scheme: dark)').onchange = e => {
+  theme.value = e.matches ? 'dark' : 'light';
+  localStorage.setItem('theme', theme.value);
+  apply();
 };
