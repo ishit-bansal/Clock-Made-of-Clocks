@@ -120,7 +120,7 @@ const norm = (n, p) => {
 // Update clock
 function tick() {
   const now = new Date();
-  const t = [now.getHours() % 12 || 12, now.getMinutes(), now.getSeconds()]
+  const t = [now.getHours(), now.getMinutes(), now.getSeconds()]
     .map(n => String(n).padStart(2, '0')).join('');
 
   for (let i = 0; i < 6; i++) {
