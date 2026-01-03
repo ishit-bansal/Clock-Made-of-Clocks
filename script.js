@@ -1,15 +1,13 @@
-// Mapping of positions to angles
-// Each clock can form different shapes based on hand angles
-// Angles: 0 = right, 90 = down, 180 = left, -90 = up
-
-const angles = {
-  'corner-tl': [90, 0],    // top-left corner: down + right
-  'corner-tr': [90, 180],  // top-right corner: down + left
-  'corner-bl': [-90, 0],   // bottom-left: up + right
-  'corner-br': [-90, 180], // bottom-right: up + left
-  'horizontal': [0, 180],  // horizontal line
-  'vertical': [-90, 90],   // vertical line
-  'blank': [135, 135]      // neutral position
+// Using box-drawing characters as visual symbols
+// Makes it easier to see patterns when defining digits
+const charMap = {
+  '╔': [90, 0],      // corner: down + right
+  '╗': [90, 180],    // corner: down + left
+  '╚': [-90, 0],     // corner: up + right
+  '╝': [-90, 180],   // corner: up + left
+  '═': [0, 180],     // horizontal line
+  '║': [-90, 90],    // vertical line
+  ' ': [135, 135]    // blank/neutral
 };
 
 // Create the grid
@@ -22,8 +20,15 @@ for (let i = 0; i < 24; i++) {
   grid.appendChild(clock);
 }
 
-// Test: set first clock to corner-tl
-const firstClock = document.querySelector('.clock');
-const hands = firstClock.querySelectorAll('.hand');
-hands[0].style.transform = `rotate(${angles['corner-tl'][0]}deg)`;
-hands[1].style.transform = `rotate(${angles['corner-tl'][1]}deg)`;
+// Function to set a clock's hands based on symbol
+function setClock(clock, symbol) {
+  const [angle1, angle2] = charMap[symbol];
+  const hands = clock.querySelectorAll('.hand');
+  hands[0].style.transform = `rotate(${angle1}deg)`;
+  hands[1].style.transform = `rotate(${angle2}deg)`;
+}
+
+// Test it out
+const clocks = document.querySelectorAll('.clock');
+setClock(clocks[0], '╔');
+setClock(clocks[3], '╗');
