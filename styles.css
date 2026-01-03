@@ -13,15 +13,17 @@ body {
   background: #f0f0f0;
 }
 
+/* Make it circular! */
 .clock {
   width: 100px;
   height: 100px;
   background: white;
   border: 2px solid black;
+  border-radius: 50%;
   position: relative;
 }
 
-/* Clock hand - rotates from left edge */
+/* Clock hands */
 .hand {
   width: 50px;
   height: 4px;
@@ -30,5 +32,4 @@ body {
   top: 50%;
   left: 50%;
   transform-origin: left center;
-  transform: rotate(45deg);
 }
