@@ -1,7 +1,7 @@
 /* Reset */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* CSS Variables for theming */
+/* Light theme (default) */
 body {
   --bg: #e0e5ec;
   --shadow-dark: #b8bec7;
@@ -13,6 +13,15 @@ body {
   align-items: center;
   justify-content: center;
   background: var(--bg);
+  transition: background 0.4s ease;
+}
+
+/* Dark theme */
+body.dark {
+  --bg: #0d0d0d;
+  --shadow-dark: #000000;
+  --shadow-light: #1a1a1a;
+  --hand-color: #e0e5ec;
 }
 
 .display { display: flex; gap: 2vw; }
@@ -33,6 +42,7 @@ body {
   box-shadow: 
     0.4vw 0.4vw 0.8vw var(--shadow-dark),
     -0.4vw -0.4vw 0.8vw var(--shadow-light);
+  transition: background 0.4s, box-shadow 0.4s;
 }
 
 .hand {
@@ -44,5 +54,5 @@ body {
   left: 50%;
   transform-origin: left center;
   border-radius: 0.1vw;
-  transition: transform 0.5s ease;
+  transition: transform 0.5s ease, background 0.4s;
 }
