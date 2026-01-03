@@ -1,12 +1,12 @@
 # Clock Made of Clocks
 
-I found this idea in hyperplexed's video and wanted to challenge myself to build it using his explanation. Check out the original concept here: [https://www.youtube.com/watch?v=VUSCH7nQGIM](https://www.youtube.com/watch?v=VUSCH7nQGIM)
+I found this idea in hyperplexed's video and wanted to challenge myself to build it using his explanation. Check out the original concept  [here](https://www.youtube.com/watch?v=VUSCH7nQGIM)
 
 ## What This Project Is
 
 This is a creative digital clock that displays the current time using digits made entirely out of mini analog clocks. Instead of traditional digital segments or pixels, each number (0-9) is formed by a 6×4 grid of 24 tiny analog clocks, where each clock's hands are positioned to create the visual shape of the digit. 
 
-**[Live Site](https://cool-clock-seven.vercel.app)**
+**[Live Site](https://clock.ishitbansal.com)**
 
 ## How It Works
 
