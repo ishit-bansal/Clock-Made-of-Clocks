@@ -1,38 +1,41 @@
 /* Reset */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* Light theme (default) */
+/* CSS Variables for theming */
 body {
   --bg: #e0e5ec;
   --shadow-dark: #b8bec7;
-  --shadow-light: #ffffff;
-  --hand-color: #2d3436;
+  --shadow-light: #fff;
+  --hand: #2d3436;
   
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--bg);
-  transition: background 0.4s ease;
+  transition: background 0.4s;
 }
 
 /* Dark theme */
 body.dark {
   --bg: #0d0d0d;
-  --shadow-dark: #000000;
+  --shadow-dark: #000;
   --shadow-light: #1a1a1a;
-  --hand-color: #e0e5ec;
+  --hand: #e0e5ec;
 }
 
+/* Layout */
 .display { display: flex; gap: 2vw; }
 .digit-pair { display: flex; gap: 0.5vw; }
 
 .digit {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(6, 1fr);
   gap: 0.3vw;
 }
 
+/* Mini clocks with neumorphic effect */
 .clock {
   width: 3vw;
   height: 3vw;
@@ -45,16 +48,17 @@ body.dark {
   transition: background 0.4s, box-shadow 0.4s;
 }
 
+/* Clock hands */
 .hand {
-  width: 1.1vw;
-  height: 0.15vw;
-  background: var(--hand-color);
   position: absolute;
   top: 50%;
   left: 50%;
+  width: 1.1vw;
+  height: 0.15vw;
+  background: var(--hand);
   transform-origin: left center;
   border-radius: 0.1vw;
-  transition: transform 0.5s ease, background 0.4s;
+  transition: transform 0.5s, background 0.4s;
 }
 
 /* Theme toggle button */
@@ -68,7 +72,7 @@ body.dark {
   height: 48px;
   border-radius: 50%;
   cursor: pointer;
-  color: var(--hand-color);
+  color: var(--hand);
   box-shadow: 
     4px 4px 8px var(--shadow-dark),
     -4px -4px 8px var(--shadow-light);
@@ -78,7 +82,13 @@ body.dark {
 .theme-toggle:hover { transform: scale(1.05); }
 .theme-toggle svg { display: block; margin: auto; }
 
-/* Sun rays styling */
+/* Sun icon */
+.theme-toggle .sun {
+  transition: transform 0.4s;
+  transform-origin: center;
+}
+
+/* Sun rays */
 .theme-toggle .rays {
   stroke: currentColor;
   stroke-width: 2;
@@ -87,19 +97,14 @@ body.dark {
   transform-origin: center;
 }
 
-/* Moon mask - covers part of sun to create crescent */
+/* Moon mask - creates crescent by covering sun */
 .theme-toggle .moon-mask {
   fill: var(--bg);
   transform: translate(6px, -6px);
   transition: transform 0.4s, fill 0.4s;
 }
 
-.theme-toggle .sun {
-  transition: transform 0.4s;
-  transform-origin: center;
-}
-
-/* Dark mode: transform sun into moon */
+/* Dark mode icon transforms */
 body.dark .theme-toggle .sun { transform: scale(1.2); }
 body.dark .theme-toggle .rays { opacity: 0; transform: rotate(-30deg); }
 body.dark .theme-toggle .moon-mask { transform: translate(-3px, 0); }
