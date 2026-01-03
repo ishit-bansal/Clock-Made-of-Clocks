@@ -56,3 +56,26 @@ body.dark {
   border-radius: 0.1vw;
   transition: transform 0.5s ease, background 0.4s;
 }
+
+/* Theme toggle button - neumorphic style */
+#themeToggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--bg);
+  border: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--hand-color);
+  font-size: 20px;
+  box-shadow: 
+    4px 4px 8px var(--shadow-dark),
+    -4px -4px 8px var(--shadow-light);
+  transition: background 0.4s, box-shadow 0.4s, color 0.4s;
+}
+
+#themeToggle:hover {
+  transform: scale(1.05);
+}
