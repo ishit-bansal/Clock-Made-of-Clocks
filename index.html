@@ -3,21 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A creative digital clock where each digit is made from a grid of mini analog clocks with rotating hands">
+  <meta name="theme-color" content="#e0e5ec">
+  
   <title>Clock Made of Clocks</title>
-  <link rel="stylesheet" href="styles.css">
+  
+  <!-- Favicon and App Icons -->
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="manifest" href="/site.webmanifest">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <button class="theme-toggle" id="theme-toggle" title="Toggle theme" aria-label="auto" aria-live="polite">
+  <!-- Theme Toggle Button -->
+  <button 
+    class="theme-toggle" 
+    id="theme-toggle" 
+    type="button"
+    title="Toggle between light and dark theme" 
+    aria-label="Toggle theme"
+  >
     <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+      <!-- Moon mask: creates the crescent effect when in dark mode -->
       <mask class="moon" id="moon-mask">
         <rect x="0" y="0" width="100%" height="100%" fill="white"/>
         <circle cx="24" cy="10" r="6" fill="black"/>
       </mask>
+      
+      <!-- Sun circle (becomes moon in dark mode via mask) -->
       <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="currentColor"/>
+      
+      <!-- Sun rays (hidden in dark mode) -->
       <g class="sun-beams" stroke="currentColor">
         <line x1="12" y1="1" x2="12" y2="3"/>
         <line x1="12" y1="21" x2="12" y2="23"/>
@@ -30,7 +49,10 @@
       </g>
     </svg>
   </button>
-  <div id="display"></div>
+
+  <!-- Main Clock Display Container -->
+  <main id="display" role="img" aria-label="Digital clock displaying current time"></main>
+
   <script src="script.js"></script>
 </body>
 </html>
