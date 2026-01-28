@@ -1,13 +1,41 @@
+/* ==========================================================================
+   Clock Made of Clocks - Stylesheet
+   A neumorphic clock display where digits are formed by mini analog clocks
+   ========================================================================== */
+
+/* External dependency for smooth easing functions */
 @import "https://unpkg.com/open-props/easings.min.css";
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ==========================================================================
+   CSS Reset & Base Styles
+   ========================================================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+/* ==========================================================================
+   Theme Variables (Light Mode Default)
+   ========================================================================== */
 
 :root {
+  /* Background and shadows create the neumorphic "soft UI" effect */
   --bg: #e0e5ec;
   --shadow-dark: #b8bec7;
   --shadow-light: #fff;
+  
+  /* Clock hand color */
   --hand: #2d3436;
 }
+
+
+/* ==========================================================================
+   Dark Theme Override
+   ========================================================================== */
 
 [data-theme="dark"] {
   --bg: #0d0d0d;
@@ -15,6 +43,11 @@
   --shadow-light: #1a1a1a;
   --hand: #e0e5ec;
 }
+
+
+/* ==========================================================================
+   Layout
+   ========================================================================== */
 
 body {
   min-height: 100vh;
@@ -25,20 +58,48 @@ body {
   transition: background 0.4s;
 }
 
-#display { display: flex; gap: 2vw; }
-.pair { display: flex; gap: 0.5vw; }
-.digit { display: grid; grid-template: repeat(6,1fr)/repeat(4,1fr); gap: 0.3vw; }
+/* Main display container - holds all digit pairs */
+#display {
+  display: flex;
+  gap: 2vw;
+}
 
+/* Each pair contains two digits (e.g., hours: "12", minutes: "34") */
+.pair {
+  display: flex;
+  gap: 0.5vw;
+}
+
+/* Each digit is a 6-row × 4-column grid of mini clocks */
+.digit {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  gap: 0.3vw;
+}
+
+
+/* ==========================================================================
+   Mini Clock Components
+   ========================================================================== */
+
+/* Individual mini clock - circular with neumorphic shadow */
 .clock {
   width: 3vw;
   height: 3vw;
   background: var(--bg);
   border-radius: 50%;
   position: relative;
-  box-shadow: 0.4vw 0.4vw 0.8vw var(--shadow-dark), -0.4vw -0.4vw 0.8vw var(--shadow-light);
-  transition: 0.4s;
+  
+  /* Neumorphic shadow: dark shadow bottom-right, light shadow top-left */
+  box-shadow:
+    0.4vw 0.4vw 0.8vw var(--shadow-dark),
+    -0.4vw -0.4vw 0.8vw var(--shadow-light);
+  
+  transition: background 0.4s, box-shadow 0.4s;
 }
 
+/* Clock hands - thin lines that rotate to form digit shapes */
 .hand {
   position: absolute;
   top: calc(50% - 1px);
@@ -47,12 +108,21 @@ body {
   height: 2px;
   background: var(--hand);
   border-radius: 9999px;
+  
+  /* Rotate from the left edge (center of the clock) */
   transform-origin: 0 50%;
+  
+  /* Smooth rotation animation */
   transition: transform 0.4s ease-in-out, background 0.4s;
+  
   z-index: 1;
 }
 
-/* Theme toggle */
+
+/* ==========================================================================
+   Theme Toggle Button
+   ========================================================================== */
+
 .theme-toggle {
   position: fixed;
   top: 20px;
@@ -64,30 +134,107 @@ body {
   color: var(--hand);
   border: none;
   cursor: pointer;
-  box-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
-  transition: 0.4s;
+  
+  /* Same neumorphic style as the clocks */
+  box-shadow:
+    4px 4px 8px var(--shadow-dark),
+    -4px -4px 8px var(--shadow-light);
+  
+  transition: transform 0.2s, background 0.4s, box-shadow 0.4s;
 }
-.theme-toggle:hover { transform: scale(1.05); }
-.theme-toggle svg { display: block; margin: auto; }
 
-.sun-and-moon > * { transform-origin: center; }
-.sun-and-moon > .sun { fill: currentColor; }
-.sun-and-moon > .sun-beams { stroke: currentColor; stroke-width: 2px; }
+.theme-toggle:hover {
+  transform: scale(1.05);
+}
 
-[data-theme="dark"] .sun-and-moon > .sun { transform: scale(1.75); }
-[data-theme="dark"] .sun-and-moon > .sun-beams { opacity: 0; }
-[data-theme="dark"] .sun-and-moon > .moon > circle { transform: translateX(-7px); }
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--hand);
+  outline-offset: 2px;
+}
 
+.theme-toggle svg {
+  display: block;
+  margin: auto;
+}
+
+
+/* ==========================================================================
+   Sun/Moon Icon Animation
+   ========================================================================== */
+
+.sun-and-moon > * {
+  transform-origin: center;
+}
+
+.sun-and-moon > .sun {
+  fill: currentColor;
+}
+
+.sun-and-moon > .sun-beams {
+  stroke: currentColor;
+  stroke-width: 2px;
+}
+
+/* Dark mode icon transformations */
+[data-theme="dark"] .sun-and-moon > .sun {
+  transform: scale(1.75);
+}
+
+[data-theme="dark"] .sun-and-moon > .sun-beams {
+  opacity: 0;
+}
+
+[data-theme="dark"] .sun-and-moon > .moon > circle {
+  transform: translateX(-7px);
+}
+
+/* Modern browser support for SVG cx property animation */
 @supports (cx: 1) {
-  [data-theme="dark"] .sun-and-moon > .moon > circle { cx: 17; transform: none; }
+  [data-theme="dark"] .sun-and-moon > .moon > circle {
+    cx: 17;
+    transform: none;
+  }
 }
+
+
+/* ==========================================================================
+   Animation Preferences (Respects User Settings)
+   ========================================================================== */
 
 @media (prefers-reduced-motion: no-preference) {
-  .sun-and-moon > .sun { transition: transform .5s var(--ease-elastic-3); }
-  .sun-and-moon > .sun-beams { transition: transform .5s var(--ease-elastic-4), opacity .5s var(--ease-3); }
-  .sun-and-moon .moon > circle { transition: transform .25s var(--ease-out-5); }
-  @supports (cx: 1) { .sun-and-moon .moon > circle { transition: cx .25s var(--ease-out-5); } }
-  [data-theme="dark"] .sun-and-moon > .sun { transition: transform .25s var(--ease-3); }
-  [data-theme="dark"] .sun-and-moon > .sun-beams { transition-duration: .15s; transform: rotate(-25deg); }
-  [data-theme="dark"] .sun-and-moon > .moon > circle { transition-duration: .5s; transition-delay: .25s; }
+  /* Light mode sun animations */
+  .sun-and-moon > .sun {
+    transition: transform 0.5s var(--ease-elastic-3);
+  }
+  
+  .sun-and-moon > .sun-beams {
+    transition:
+      transform 0.5s var(--ease-elastic-4),
+      opacity 0.5s var(--ease-3);
+  }
+  
+  .sun-and-moon .moon > circle {
+    transition: transform 0.25s var(--ease-out-5);
+  }
+  
+  @supports (cx: 1) {
+    .sun-and-moon .moon > circle {
+      transition: cx 0.25s var(--ease-out-5);
+    }
+  }
+  
+  /* Dark mode - different timing for moon transition */
+  [data-theme="dark"] .sun-and-moon > .sun {
+    transition: transform 0.25s var(--ease-3);
+  }
+  
+  [data-theme="dark"] .sun-and-moon > .sun-beams {
+    transition-duration: 0.15s;
+    transform: rotate(-25deg);
+  }
+  
+  [data-theme="dark"] .sun-and-moon > .moon > circle {
+    transition-duration: 0.5s;
+    transition-delay: 0.25s;
+  }
 }
