@@ -1,1 +1,22 @@
-{"name":"Clock Made of Clocks","short_name":"","icons":[{"src":"/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},{"src":"/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}],"theme_color":"#ffffff","background_color":"#ffffff","display":"standalone"}
+{
+  "name": "Clock Made of Clocks",
+  "short_name": "Clock",
+  "description": "A creative digital clock where each digit is made from a grid of mini analog clocks",
+  "start_url": "/",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#e0e5ec",
+  "background_color": "#e0e5ec",
+  "display": "standalone"
+}
